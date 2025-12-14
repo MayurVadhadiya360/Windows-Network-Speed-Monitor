@@ -154,9 +154,8 @@ class NetSpeedOverlay(QWidget):
         self.adjustSize()
 
 
-
 class TrayController:
-    def __init__(self, app, overlay):
+    def __init__(self, app: QApplication, overlay: NetSpeedOverlay):
         self.app = app
         self.overlay = overlay
 
@@ -164,19 +163,19 @@ class TrayController:
         self.tray = QSystemTrayIcon(icon, app)
         self.tray.setToolTip("Network Speed Monitor")
 
-        menu = QMenu()
+        self.menu = QMenu()
 
-        self.toggle_action = QAction("Hide Overlay")
+        self.toggle_action = QAction("Hide Overlay", self.menu)
         self.toggle_action.triggered.connect(self.toggle_overlay)
 
-        exit_action = QAction("Exit")
-        exit_action.triggered.connect(self.exit_app)
+        self.exit_action = QAction("Exit", self.menu)
+        self.exit_action.triggered.connect(self.exit_app)
 
-        menu.addAction(self.toggle_action)
-        menu.addSeparator()
-        menu.addAction(exit_action)
+        self.menu.addAction(self.toggle_action)
+        self.menu.addSeparator()
+        self.menu.addAction(self.exit_action)
 
-        self.tray.setContextMenu(menu)
+        self.tray.setContextMenu(self.menu)
         self.tray.show()
 
     def toggle_overlay(self):
@@ -185,10 +184,12 @@ class TrayController:
             self.toggle_action.setText("Show Overlay")
         else:
             self.overlay.show()
+            self.overlay.make_click_through()
             self.toggle_action.setText("Hide Overlay")
 
     def exit_app(self):
         self.tray.hide()
+        self.overlay.close()
         self.app.quit()
 
 
