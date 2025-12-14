@@ -1,0 +1,6 @@
+.vs
+NetworkSpeedMonitor/
+
+.venv
+build
+*.spec
