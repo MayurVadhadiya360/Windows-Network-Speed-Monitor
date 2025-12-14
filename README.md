@@ -27,7 +27,12 @@ Built with **Python + PyQt**, it displays **live upload/download speed**, suppor
 
 ## 📸 Preview
 
-↓ 12.3 MB/s ↑ 1.2 MB/s
+<!-- ↓ 12.3 MB/s ↑ 1.2 MB/s -->
+#### Network Speed Display Preview
+![Network Speed Display Preview](./assets/image.png)
+#### System Tray Preview
+![Network Speed Tray Preview](./assets/Tray_Screenshot.png)
+
 
 - Green → High speed  
 - Orange → Medium speed  

@@ -112,7 +112,7 @@ class NetSpeedOverlay(QWidget):
         else:
             text = f"{value:.0f}"
 
-        text = text.rstrip("0").rstrip(".")
+        # text = text.rstrip("0").rstrip(".")
         return f"{text} {units[unit_index]}"
 
 
