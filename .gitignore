@@ -1,5 +1,5 @@
 .vs
-network_speed_monitor_config.json
+network_speed_overlay_config.json
 
 .venv
 build
