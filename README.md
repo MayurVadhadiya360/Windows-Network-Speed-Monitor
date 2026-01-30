@@ -1,27 +1,51 @@
 # 🚀 Windows Network Speed Overlay (Android-Style)
 
-![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)
 ![Windows](https://img.shields.io/badge/Windows-11-blue?style=for-the-badge&logo=windows11&logoColor=white)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://github.com/MayurVadhadiya360/Windows-Network-Speed-Monitor/blob/main/LICENSE)
 
-A lightweight **always-on-top network speed overlay for Windows 11**, inspired by Android’s real-time status bar speed indicator.
-
-Built with **Python + PyQt**, it displays **live upload/download speed**, supports **click-through overlay**, **system tray controls**, adaptive units, and color-coded speed thresholds.
+A lightweight **Android-style real-time network speed overlay** for Windows.  
+Runs as a transparent, always-on-top widget with full customization via a built-in settings panel.  
+Built with **Python + PyQt5**, using **psutil** and the Windows Win32 API., it displays **live upload/download speed**, supports **click-through overlay**, **system tray controls**, adaptive units, and color-coded speed thresholds.
 
 ---
 
 ## ✨ Features
 
-- 📡 Real-time **upload & download speed**
-- 🪟 **Always-on-top transparent overlay**
-- 🖱 **Click-through window** (does not block mouse input)
-- 🎨 **Color-coded speed thresholds**
-- 📏 **Adaptive units** (B / KB / MB / GB)
-- 🔢 **Android-style 3-digit formatting**
-- ↕ Separate **Upload / Download indicators**
-- 🔔 **System tray toggle** (Show / Hide / Exit)
-- ⚡ Very low CPU & memory usage
-- 🪟 Optimized for **Windows 11**
+### Overlay
+- 📡 Real-time **download & upload speed**
+- 🪟 Frameless **always-on-top transparent overlay**
+- 🖱 **Click-through mode** (mouse passes through)
+- ↕ Separate **download / upload** indicators
+- 🔢 Android-style **3-digit adaptive formatting**
+- 📏 Automatic unit switching (B/s → KB/s → MB/s → GB/s)
+
+### Appearance
+- Font size control
+- Horizontal / vertical layout
+- Independent unit mode for upload & download
+- Color-coded speed thresholds
+- Custom colors per speed range
+
+### Behavior
+- Click-through toggle  
+- Always-on-top toggle  
+- Refresh interval (250–5000 ms)  
+- Pause updates when hidden  
+
+### Position
+- Manual X/Y placement  
+- Quick presets (corners, center)  
+- Position restore on cancel  
+
+### System Tray
+- Show / Hide overlay  
+- Open Settings (double-click tray icon)  
+- Exit app safely  
+
+### Startup
+- Optional **Start with Windows**
+- Uses Windows Startup folder shortcut 
 
 ---
 
@@ -29,14 +53,7 @@ Built with **Python + PyQt**, it displays **live upload/download speed**, suppor
 
 <!-- ↓ 12.3 MB/s ↑ 1.2 MB/s -->
 #### Network Speed Display Preview
-![Network Speed Display Preview](./assets/image.png)
-#### System Tray Preview
-![Network Speed Tray Preview](./assets/Tray_Screenshot.png)
-
-
-- Green → High speed  
-- Orange → Medium speed  
-- Red → Low speed  
+![Network Speed Display Preview](./assets/Preview-edited.png)
 
 ---
 
@@ -44,8 +61,9 @@ Built with **Python + PyQt**, it displays **live upload/download speed**, suppor
 
 - **Python 3.9+**
 - **PyQt5** – UI & overlay
-- **psutil** – Network statistics
-- **Windows Win32 API (ctypes)** – Click-through behavior
+- **psutil** – network counters
+- **win32gui / win32con** – click-through & window styles
+- **winshell + WScript** – Windows startup integration
 
 ---
 
@@ -67,81 +85,91 @@ Note: Use official python (Using with Anaconda environment may result in `_ctype
 ```bash
 python netspeed_overlay.py
 ```
+⚠ Windows only (Win32 APIs are required)
 
 ## 🎮 Usage
 
-- Overlay starts automatically
-- Appears at the top-right corner
-- Does not block mouse clicks
-- Right-click the system tray icon:
-  - Show Overlay
-  - Hide Overlay
-  - Exit
+- App starts minimized to tray
+- Overlay appears immediately
+- Double-click tray icon → Settings
+- Right-click tray → menu
 
 ---
 
-## 🎨 Speed Color Logic
-| Speed      | Color     |
-| ---------- | --------- |
-| < 100 KB/s | 🔴 Red    |
-| < 2 MB/s   | 🟠 Orange |
-| ≥ 2 MB/s   | 🟢 Green  |
-(Thresholds are configurable in code)
+## 🎨 Speed Threshold System
+Each direction (download/upload) supports:
+|Level	    | Default       |
+| --------- | ------------- |
+|Very Low	  | < 1 KB/s      |
+|Low	      | < 100 KB/s    |
+|Medium	    | < 2 MB/s      |
+|High	      | < 10 MB/s     |
+|Very High	| fallback color|
+
+Thresholds & colors are fully configurable.
 
 ## 🔢 Speed Formatting Logic
 
-- Max 3 visible digits (Android-style)
-- Automatically switches units:
-  - `512 B/s`
-  - `1.2 KB/s`
-  - `12.3 MB/s`
-  - `1.0 GB/s`
+| Speed     | Output      |
+| --------- | ----------- |
+| 512 B/s   | `512 B/s`   |
+| 1.2 KB/s  | `1.2 KB/s`  |
+| 12.3 MB/s | `12.3 MB/s` |
+| 1.0 GB/s  | `1 GB/s`    |
+
+Max 3 visible digits
 
 ## 🧠 How Click-Through Works
 
-The overlay uses Windows extended window styles:
+The overlay uses Win32 extended styles:
 - `WS_EX_LAYERED`
 - `WS_EX_TRANSPARENT`
 
-This allows:
-- Full visibility
-- Zero mouse interference
-- Perfect for gaming & fullscreen apps
+This allows the window to:
+- Stay visible
+- Not block mouse input
+- Work in fullscreen apps
 
 
-## 🏁 Auto-Start on Boot (Optional)
-### Method 1: Startup Folder
-1. Press `Win + R`
-2. Type `shell:startup`
-3. Place the executable or script shortcut there
-
-### Method 2: Registry
-```reg
-HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+## 🏁 Start with Windows
+Enabled from **Settings → General**  
+Creates a shortcut in:
+```makefile
+shell:startup
 ```
 
-## 📦 Build Executable (Optional)
+
+## 📦 Build EXE (PyInstaller)
 ```bash
-pyinstaller --onefile --noconsole netspeed_overlay.py
+pyinstaller --onefile --noconsole ^
+  --icon=up_down_icon.ico ^
+  --add-data "up_down_icon.ico;." ^
+  --add-data "network_speed_overlay_config.json;." ^
+  --version-file version.txt ^
+  network_speed_overlay.py
 ```
 The EXE will be created in the `dist/` folder.
+```bash
+dist/network_speed_overlay.exe
+```
 
 ## ⚠ Limitations
 - Windows-only (uses Win32 API)
-- Not a native Windows widget (overlay workaround)
-- Requires Python runtime (unless packaged)
+- Requires admin rights on some systems
+- Click-through may not work over all fullscreen apps
 
 ## 🧠 Future Improvements
 - Multi-monitor positioning
-- Acrylic / Mica blur effect
+- Export / Import settings
 - Per-network-adapter selection
-- Save position & preferences
+- Theme presets
+- CPU usage limiter
 - Rolling average smoothing
 - PyQt6 migration
 
 ## 📜 License
 MIT License — free to use, modify, and distribute.
 
-## 🙌 Acknowledgements
-Inspired by Android’s network speed indicator
-Built for developers who want clean, functional desktop utilities
+## 🙌 Author
+**Mayur Vadhadiya**  
+GitHub: [https://github.com/MayurVadhadiya360](https://github.com/MayurVadhadiya360)
