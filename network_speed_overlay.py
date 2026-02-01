@@ -38,7 +38,11 @@ def resource_path(relative_path: str) -> str:
 
 
 APP_NAME = "NetworkSpeedOverlay"
-CONFIG_PATH = resource_path("network_speed_overlay_config.json")
+USER_CONFIG_PATH = os.path.join(
+    os.getenv("APPDATA"),
+    APP_NAME,
+    "network_speed_overlay_config.json"
+)
 
 DEFAULT_CONFIG = {
     "appearance": {
@@ -138,19 +142,32 @@ def is_startup_enabled():
     return os.path.exists(startup_shortcut_path())
 
 
-def load_config():
-    if not os.path.exists(CONFIG_PATH):
-        save_config(DEFAULT_CONFIG)
-        return DEFAULT_CONFIG.copy()
+def load_config() -> dict:
+    os.makedirs(os.path.dirname(USER_CONFIG_PATH), exist_ok=True)
 
-    with open(CONFIG_PATH, "r") as f:
-        cfg: dict[str, Any] = json.load(f)
-        cfg.setdefault("startup", {})["enabled"] = is_startup_enabled()
-        return cfg
+    # First run: create config from DEFAULT_CONFIG
+    if not os.path.exists(USER_CONFIG_PATH):
+        with open(USER_CONFIG_PATH, "w", encoding="utf-8") as f:
+            json.dump(DEFAULT_CONFIG, f, indent=4)
+
+        cfg = DEFAULT_CONFIG.copy()
+    else:
+        with open(USER_CONFIG_PATH, "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+
+    # Ensure startup section exists
+    cfg.setdefault("startup", {})
+
+    # Sync real startup state
+    cfg["startup"]["enabled"] = is_startup_enabled()
+
+    return cfg
 
 
-def save_config(cfg):
-    with open(CONFIG_PATH, "w") as f:
+def save_config(cfg: dict):
+    os.makedirs(os.path.dirname(USER_CONFIG_PATH), exist_ok=True)
+
+    with open(USER_CONFIG_PATH, "w", encoding="utf-8") as f:
         json.dump(cfg, f, indent=4)
 
 

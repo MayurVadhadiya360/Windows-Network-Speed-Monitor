@@ -17,8 +17,8 @@ VSVersionInfo(
           StringStruct(u'CompanyName', u'Mayur Vadhadiya'),
           StringStruct(u'ProductName', u'Network Speed Overlay'),
           StringStruct(u'FileDescription', u'Real-time desktop network speed overlay'),
-          StringStruct(u'FileVersion', u'1.2.0'),
-          StringStruct(u'ProductVersion', u'1.2.0'),
+          StringStruct(u'FileVersion', u'1.2.1'),
+          StringStruct(u'ProductVersion', u'1.2.1'),
         ]
       )]
     ),

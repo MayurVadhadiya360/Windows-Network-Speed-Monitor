@@ -1,10 +1,10 @@
-# 🚀 Windows Network Speed Overlay (Android-Style)
+# 🚀 Windows Network Speed Overlay
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)
 ![Windows](https://img.shields.io/badge/Windows-11-blue?style=for-the-badge&logo=windows11&logoColor=white)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://github.com/MayurVadhadiya360/Windows-Network-Speed-Monitor/blob/main/LICENSE)
 
-A lightweight **Android-style real-time network speed overlay** for Windows.  
+A lightweight **Real-Time Network Speed Overlay** for Windows.  
 Runs as a transparent, always-on-top widget with full customization via a built-in settings panel.  
 Built with **Python + PyQt5**, using **psutil** and the Windows Win32 API., it displays **live upload/download speed**, supports **click-through overlay**, **system tray controls**, adaptive units, and color-coded speed thresholds.
 
@@ -17,7 +17,7 @@ Built with **Python + PyQt5**, using **psutil** and the Windows Win32 API., it d
 - 🪟 Frameless **always-on-top transparent overlay**
 - 🖱 **Click-through mode** (mouse passes through)
 - ↕ Separate **download / upload** indicators
-- 🔢 Android-style **3-digit adaptive formatting**
+- 🔢 **3-digit adaptive formatting**
 - 📏 Automatic unit switching (B/s → KB/s → MB/s → GB/s)
 
 ### Appearance
@@ -144,7 +144,6 @@ shell:startup
 pyinstaller --onefile --noconsole ^
   --icon=up_down_icon.ico ^
   --add-data "up_down_icon.ico;." ^
-  --add-data "network_speed_overlay_config.json;." ^
   --version-file version.txt ^
   network_speed_overlay.py
 ```
